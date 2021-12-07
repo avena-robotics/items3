@@ -42,7 +42,7 @@ def sample_pose(obj_sampled: blenderproc.types.MeshObject) -> None:
 def main():
     global table
     # Load items from file
-    items = get_all_items_list("/home/avena/PycharmProjects/pythonProject/items/new_items_list.json")
+    items = get_all_items_list("../loading_dictionaries/items_dictionary.json")
 
     for _ in range(10000):
         # Reset environment
@@ -55,7 +55,7 @@ def main():
         # init blenderproc
 
         # Load the table
-        table = blenderproc.loader.load_blend("/home/avena/Dropbox/synth_dataset/BlenderProc/avena/Bez_fspy.blend")[0]
+        table = blenderproc.loader.load_blend("../scenes/Bez_fspy.blend")[0]
         # Make table static
         table.enable_rigidbody(False)
 
