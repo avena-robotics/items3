@@ -13,11 +13,17 @@ from detectron2.config import get_cfg
 from detectron2.utils.visualizer import Visualizer
 from detectron2.data import MetadataCatalog, DatasetCatalog
 from detectron2.data.datasets import register_coco_instances
+
+# here we point our dataset json file and images folder
 register_coco_instances("my_dataset_train", {}, "../datasets/stadard_01/coco_annotations.json", "../datasets/stadard_01")
+# if you have more than one data set you can register it here also, example:
+# register_coco_instances("my_dataset_train_2", {}, "../datasets/stadard_02/coco_annotations.json", "../datasets/stadard_02")
+# remember that name of dataset and both folders names (json and images) should be different than first one
+
 
 from detectron2.engine import DefaultTrainer
 
-
+# bitmask or polygon
 cfg = get_cfg()
 cfg.INPUT.MASK_FORMAT = "bitmask"
 
