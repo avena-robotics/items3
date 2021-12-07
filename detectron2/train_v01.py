@@ -13,8 +13,7 @@ from detectron2.config import get_cfg
 from detectron2.utils.visualizer import Visualizer
 from detectron2.data import MetadataCatalog, DatasetCatalog
 from detectron2.data.datasets import register_coco_instances
-register_coco_instances("my_dataset_val", {}, "/home/avena/PycharmProjects/pythonProject/containers_001/coco_annotations.json", "/home/avena/PycharmProjects/pythonProject/containers_001")
-register_coco_instances("my_dataset_train", {}, "/home/avena/PycharmProjects/pythonProject/standard_002/coco_annotations.json", "/home/avena/PycharmProjects/pythonProject/standard_002")
+register_coco_instances("my_dataset_train", {}, "../datasets/stadard_01/coco_annotations.json", "../datasets/stadard_01")
 
 from detectron2.engine import DefaultTrainer
 
