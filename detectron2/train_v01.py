@@ -103,6 +103,7 @@ if __name__ == "__main__":
 
     launch(
         main,
+        # 2 - number of GPUs
         2,
         num_machines=args.num_machines,
         machine_rank=args.machine_rank,
