@@ -8,7 +8,7 @@ import os, json, cv2, random
 
 # import some common detectron2 utilities
 from detectron2 import model_zoo
-from detectron2.engine import DefaultPredictor
+from detectron2.engine import DefaultPredictor,launch
 from detectron2.config import get_cfg
 from detectron2.utils.visualizer import Visualizer
 from detectron2.data import MetadataCatalog, DatasetCatalog
@@ -27,6 +27,7 @@ from detectron2.engine import DefaultTrainer
 cfg = get_cfg()
 cfg.INPUT.MASK_FORMAT = "bitmask"
 
+
 cfg.merge_from_file(model_zoo.get_config_file("COCO-InstanceSegmentation/mask_rcnn_R_50_FPN_3x.yaml"))
 # extra dataset should be mentioned in line, after comma:
 cfg.DATASETS.TRAIN = ("my_dataset_train",)
@@ -39,7 +40,7 @@ cfg.DATALOADER.NUM_WORKERS = 2
 # cfg.MODEL.WEIGHTS = "~/blenderproc/detectron2/output/model_final.pth"  # Let training initialize from previous training
 
 #how many images per batch - more is better but it is limited by gpu memory, but (???)
-cfg.SOLVER.IMS_PER_BATCH = 2
+cfg.SOLVER.IMS_PER_BATCH = 6
 # learning rate, start with higher, later decrease
 cfg.SOLVER.BASE_LR = 0.00025  # pick a good LR
 
@@ -58,7 +59,7 @@ cfg.MODEL.ROI_HEADS.NUM_CLASSES = 26  # only has one class (ballon). (see https:
 os.makedirs(cfg.OUTPUT_DIR, exist_ok=True)
 trainer = DefaultTrainer(cfg)
 trainer.resume_or_load(resume=False)
-trainer.train()
+launch(trainer.train(), num_gpus_per_machine=2, num_machines=1)
 
 
 #name of weight files

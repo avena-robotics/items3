@@ -1,0 +1,2 @@
+obj -> png   https://3dviewer.net/
+png -> 3xjpg   https://www.fotojet.com/apps/?entry=collage
