@@ -10,42 +10,16 @@ import numpy as np
 import argparse
 import os
 import random
+import sys
+sys.path.append("/home/avena/software/items3/scripts")
+
+
+from utils import get_all_items_list, choose_items_to_load, sample_pose_wrapper
 
 parser = argparse.ArgumentParser()
 parser.add_argument('output', nargs='?')
 args = parser.parse_args()
 
-
-def get_all_items_list(path_json: str) -> dict:
-    with open(path_json, 'r') as f:
-        return json.load(f)
-
-
-def choose_items_to_load(items: dict, n: int) -> (list, list):
-    ids = list(set(items.values()))
-    ids_list = list(np.random.choice(ids, n))
-    ids_list = list(map(int, ids_list))
-
-    items_list = []
-    for chosen_id in ids_list:
-        matching_items = [k for k, v in items.items() if v == chosen_id]
-        items_list.append(np.random.choice(matching_items, 1)[0])
-
-    return items_list, ids_list
-
-
-def sample_pose_wrapper(obj_parent: blenderproc.types.MeshObject, d1_max, d2_max):
-    def sample_pose_inside(obj_sampled_inside):
-        obj_sampled_inside.set_location(blenderproc.sampler.upper_region(
-            objects_to_sample_on=obj_parent,
-            min_height=0.2,
-            max_height=0.4,
-            use_ray_trace_check=True,
-            upper_dir=[0.0, 0.0, 1.0],
-            use_upper_dir=True
-        ))
-        obj_sampled_inside.set_rotation_euler(np.random.uniform([np.pi/2, 0, 0], [np.pi/2, d2_max, np.pi * 2]))
-    return sample_pose_inside
 
 
 def main():

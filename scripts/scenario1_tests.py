@@ -2,41 +2,15 @@ import blenderproc
 import json
 import numpy as np
 import argparse
+import sys
+
+sys.path.append("/home/avena/software/items3/scripts")
+
+from utils import get_objs, sample_pose_wrapper, choose_items_to_load
 
 parser = argparse.ArgumentParser()
 parser.add_argument('output', nargs='?')
 args = parser.parse_args()
-
-
-def sample_pose_wrapper(obj_parent: blenderproc.types.MeshObject, d1_max, d2_max):
-    def sample_pose_inside(obj_sampled_inside):
-        obj_sampled_inside.set_location(blenderproc.sampler.upper_region(
-            objects_to_sample_on=obj_parent,
-            min_height=0.2,
-            max_height=0.4,
-            use_ray_trace_check=True,
-            upper_dir=[0.0, 0.0, 1.0],
-            use_upper_dir=True
-        ))
-        obj_sampled_inside.set_rotation_euler(np.random.uniform([np.pi/2, 0, 0], [np.pi/2, d2_max, np.pi * 2]))
-    return sample_pose_inside
-
-def get_all_items_list(path_json: str) -> dict:
-    with open(path_json, 'r') as f:
-        return json.load(f)
-
-
-def choose_items_to_load(items: dict, n: int) -> (list, list):
-    ids = list(set(items.values()))
-    ids_list = list(np.random.choice(ids, n))
-    ids_list = list(map(int, ids_list))
-
-    items_list = []
-    for chosen_id in ids_list:
-        matching_items = [k for k, v in items.items() if v == chosen_id]
-        items_list.append(np.random.choice(matching_items, 1)[0])
-
-    return items_list, ids_list
 
 
 def main():
@@ -47,8 +21,8 @@ def main():
     table[0].enable_rigidbody(True, collision_shape='CONVEX_HULL')
     blenderproc.lighting.light_surface(table, -5, keep_using_base_color=True)
 
-    consumables_items = get_all_items_list("/home/avena/software/items3/loading_dictionaries/consumables_dictionary.json")
-    containers_items = get_all_items_list("/home/avena/software/items3/loading_dictionaries/containers_dictionary.json")
+    consumables_items = get_objs("/home/avena/Dropbox/3Dobj", "consumables", ["milk", "lipton"])
+    containers_items = get_objs("/home/avena/Dropbox/3Dobj", "containers", ["board"])
 
     n_containers = 5
     container_to_load, id_of_container_to_load = choose_items_to_load(containers_items, n_containers)
@@ -63,7 +37,7 @@ def main():
     container_sampler = sample_pose_wrapper(table[0], 0, 0)
 
     blenderproc.object.sample_poses_on_surface(containers, table[0], container_sampler, min_distance=0.1, max_distance=3)
-    blenderproc.lighting.light_surface(containers, -2, keep_using_base_color=True)
+    blenderproc.lighting.light_surface(containers, -1, keep_using_base_color=True)
 
     for i in range(n_containers):
         consumable_to_load, id_of_consumable_to_load = choose_items_to_load(consumables_items, 1)
@@ -77,9 +51,6 @@ def main():
 
         consumables_sampler = sample_pose_wrapper(containers[i], 0, 0)
         consumables = blenderproc.object.sample_poses_on_surface(consumables, containers[i], consumables_sampler, min_distance=0.1, max_distance=1)
-
-        # for material in consumables[0].get_materials():
-        #     material.make_emissive(20)
 
         bounding_box = containers[i].get_bound_box()
         points = bounding_box[[0, 1, 4, 5]]
@@ -108,7 +79,7 @@ def main():
             consumable.set_cp("category_id", id_of_consumable_to_load[0])
             consumable.set_name(item_name)
 
-    # blenderproc.object.simulate_physics_and_fix_final_poses(0.5, 2)
+    blenderproc.object.simulate_physics_and_fix_final_poses(0.5, 2)
 
     light_p = blenderproc.types.Light()
     light_p.set_type("POINT")
@@ -116,10 +87,10 @@ def main():
     light_p.set_rotation_euler([0, 0, 0])
     light_p.set_energy(80)
 
-    blenderproc.camera.set_intrinsics_from_blender_params(lens=0.017453, image_width=2400, image_height=1350,
+    blenderproc.camera.set_intrinsics_from_blender_params(lens=0.017453, image_width=1000, image_height=720,
                                                           lens_unit='FOV')
 
-    position = [0, 0, 138]
+    position = [0, 0, 80]
     rotation = [0, 0, 0]
     matrix_world = blenderproc.math.build_transformation_mat(position, rotation)
     blenderproc.camera.add_camera_pose(matrix_world)
