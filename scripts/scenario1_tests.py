@@ -10,6 +10,7 @@ from utils import get_objs, sample_pose_wrapper, choose_items_to_load
 
 parser = argparse.ArgumentParser()
 parser.add_argument('output', nargs='?')
+parser.add_argument('data', nargs="?")
 args = parser.parse_args()
 
 
@@ -21,8 +22,8 @@ def main():
     table[0].enable_rigidbody(True, collision_shape='CONVEX_HULL')
     blenderproc.lighting.light_surface(table, -5, keep_using_base_color=True)
 
-    consumables_items = get_objs("/home/avena/Dropbox/3Dobj", "consumables", ["milk", "lipton"])
-    containers_items = get_objs("/home/avena/Dropbox/3Dobj", "containers", ["board"])
+    consumables_items = get_objs(args.data, "consumables", ["milk", "lipton"])
+    containers_items = get_objs(args.data, "containers", ["board"])
 
     n_containers = 5
     container_to_load, id_of_container_to_load = choose_items_to_load(containers_items, n_containers)

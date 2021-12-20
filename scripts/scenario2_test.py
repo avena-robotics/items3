@@ -10,6 +10,7 @@ from utils import get_objs, choose_items_to_load, sample_pose_wrapper
 
 parser = argparse.ArgumentParser()
 parser.add_argument('output', nargs='?')
+parser.add_argument('data', nargs="?")
 args = parser.parse_args()
 
 
@@ -21,8 +22,8 @@ def main():
     table[0].enable_rigidbody(True, collision_shape='CONVEX_HULL')
     blenderproc.lighting.light_surface(table, -5, keep_using_base_color=True)
 
-    consumables_items = get_objs("/home/avena/Dropbox/3Dobj", "consumables", [])
-    containers_items = get_objs("/home/avena/Dropbox/3Dobj", "containers", ["plate", "bowl"])
+    consumables_items = get_objs(args.data, "consumables", [])
+    containers_items = get_objs(args.data, "containers", ["plate", "bowl"])
 
     n_containers = 5
     container_to_load, id_of_container_to_load = choose_items_to_load(containers_items, n_containers)
@@ -69,7 +70,7 @@ def main():
     blenderproc.camera.set_intrinsics_from_blender_params(lens=0.017453, image_width=1000, image_height=720,
                                                           lens_unit='FOV')
 
-    position = [0, 0, 70]
+    position = [0, 0, 80]
     rotation = [0, 0, 0]
     matrix_world = blenderproc.math.build_transformation_mat(position, rotation)
     blenderproc.camera.add_camera_pose(matrix_world)
