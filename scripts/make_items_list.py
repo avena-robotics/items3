@@ -18,7 +18,7 @@ if __name__ == "__main__":
     # with open("items/containers_json.json", "w") as f:
     #     json.dump(items, f, indent=2)
     items_dict = {}
-    for parent in os.walk("../3Dobj/"):
+    for parent in os.walk("/home/avena/Dropbox/3Dobj/containers"):
         for child in parent[2]:
             if child.endswith(".obj") and child[0].isalpha():
                 items_dict[os.path.join(parent[0], child)] = int(parent[0].split("/")[-2].split("-")[0])
@@ -28,5 +28,5 @@ if __name__ == "__main__":
     #         if child.endswith(".obj") and child[0].isalpha():
     #             items_dict[os.path.join(parent[0], child)] = int(parent[0].split("/")[-2].split("-")[0])
 
-    with open("../loading_dictionaries/items_dictionary.json", "w") as f:
+    with open("../loading_dictionaries/containers_flat_dictionary.json", "w") as f:
         json.dump(items_dict, f, indent=2)
