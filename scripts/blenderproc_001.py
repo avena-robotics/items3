@@ -4,12 +4,14 @@ import math
 import numpy as np
 import argparse
 import sys
+
 sys.path.append("/home/avena/software/items3/scripts")
 
-from utils import choose_items_to_load, get_all_items_list
+from utils import choose_items_to_load, get_all_items_list, get_objs
 
 parser = argparse.ArgumentParser()
 parser.add_argument('output', nargs='?')
+parser.add_argument('data', nargs='?')
 args = parser.parse_args()
 
 global table
@@ -29,7 +31,7 @@ def sample_pose(obj_sampled: blenderproc.types.MeshObject) -> None:
 def main():
     global table
     # Load items from file
-    items = get_all_items_list("../loading_dictionaries/items_dictionary.json")
+    items = get_objs(args.data)
 
     for _ in range(10000):
         # Reset environment
