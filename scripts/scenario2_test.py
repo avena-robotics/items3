@@ -37,10 +37,10 @@ def main():
 
     container_sampler = sample_pose_wrapper(table[0], 0, 0)
 
-    blenderproc.object.sample_poses_on_surface(containers, table[0], container_sampler, min_distance=0.1, max_distance=3)
+    containers = blenderproc.object.sample_poses_on_surface(containers, table[0], container_sampler, min_distance=0.1, max_distance=3)
     blenderproc.lighting.light_surface(containers, -5, keep_using_base_color=True)
 
-    for i in range(n_containers):
+    for i in range(len(containers)):
         consumables_to_load, ids_of_consumable_to_load = choose_items_to_load(consumables_items, 4)
 
         consumables = [blenderproc.loader.load_obj(consumable_to_load)[0] for consumable_to_load in consumables_to_load]
@@ -67,11 +67,11 @@ def main():
     light_p.set_rotation_euler([0, 0, 0])
     light_p.set_energy(80)
 
-    blenderproc.camera.set_intrinsics_from_blender_params(lens=0.017453, image_width=1000, image_height=720,
+    blenderproc.camera.set_intrinsics_from_blender_params(lens=0.017453 / 2, image_width=1000, image_height=720,
                                                           lens_unit='FOV')
 
-    position = [0, 0, 80]
-    rotation = [0, 0, 0]
+    position = [0, 0, 138]
+    rotation = [0, 0, np.pi/2]
     matrix_world = blenderproc.math.build_transformation_mat(position, rotation)
     blenderproc.camera.add_camera_pose(matrix_world)
 
