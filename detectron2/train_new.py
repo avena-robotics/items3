@@ -12,8 +12,8 @@ from detectron2.data import MetadataCatalog, DatasetCatalog
 from detectron2.data.datasets import register_coco_instances
 from detectron2.evaluation import COCOEvaluator
 
-register_coco_instances("my_dataset_val", {}, "/home/avena/PycharmProjects/pythonProject/standard_003/coco_annotations.json", "/home/avena/PycharmProjects/pythonProject/standard_002")
-register_coco_instances("my_dataset_train", {}, "/home/avena/PycharmProjects/pythonProject/standard_002/coco_annotations.json", "/home/avena/PycharmProjects/pythonProject/standard_002")
+register_coco_instances("my_dataset_val", {}, "/home/avena/software/items3/datasets/random_domain/dataset1/coco_annotations.json", "/home/avena/software/items3/datasets/random_domain/dataset1")
+register_coco_instances("my_dataset_train", {}, "/home/avena/software/items3/datasets/standard/dataset1/coco_annotations.json", "/home/avena/software/items3/datasets/standard/dataset1")
 
 from detectron2.engine import DefaultTrainer
 
@@ -111,12 +111,30 @@ class MyTrainer(DefaultTrainer):
         ))
         return hooks
 
+
 cfg = get_cfg()
 cfg.INPUT.MASK_FORMAT = "bitmask"
 
 cfg.merge_from_file(model_zoo.get_config_file("COCO-InstanceSegmentation/mask_rcnn_R_50_FPN_3x.yaml"))
 cfg.DATASETS.TRAIN = ("my_dataset_train",)
 cfg.DATASETS.TEST = ("my_dataset_val", )
+
+
+import random
+fruits_nuts_metadata = MetadataCatalog.get("my_dataset_val")
+dataset_dicts = DatasetCatalog.get("my_dataset_val")
+for d in random.sample(dataset_dicts, 600):
+    img = cv2.imread(d["file_name"])
+    visualizer = Visualizer(img[:, :, ::-1], scale=1)
+    vis = visualizer.draw_dataset_dict(d)
+    cv2.imshow("", vis.get_image()[:, :, ::-1])
+    cv2.waitKey(0)
+
+
+
+
+
+
 cfg.DATALOADER.NUM_WORKERS = 2
 # cfg.MODEL.WEIGHTS = "/home/avena/PycharmProjects/pythonProject/detectron/output/model_final.pth"  # Let training initialize from model zoo
 cfg.SOLVER.IMS_PER_BATCH = 2
@@ -124,7 +142,7 @@ cfg.SOLVER.BASE_LR = 0.002  # pick a good LR
 cfg.SOLVER.MAX_ITER = 1501    # 300 iterations seems good enough for this toy dataset; you will need to train longer for a practical dataset
 cfg.SOLVER.STEPS = []        # do not decay learning rate
 cfg.MODEL.ROI_HEADS.BATCH_SIZE_PER_IMAGE = 512   # faster, and good enough for this toy dataset (default: 512)
-cfg.MODEL.ROI_HEADS.NUM_CLASSES = 26  # only has one class (ballon). (see https://detectron2.readthedocs.io/tutorials/datasets.html#update-the-config-for-new-datasets)
+cfg.MODEL.ROI_HEADS.NUM_CLASSES = 29  # only has one class (ballon). (see https://detectron2.readthedocs.io/tutorials/datasets.html#update-the-config-for-new-datasets)
 # NOTE: this config means the number of classes, but a few popular unofficial tutorials incorrect uses num_classes+1 here.
 cfg.TEST.EVAL_PERIOD = 100
 os.makedirs(cfg.OUTPUT_DIR, exist_ok=True)

@@ -28,10 +28,10 @@ weights = args.Weights
 cfg = get_cfg()
 
 # Load config used for training
-cfg.merge_from_file(model_zoo.get_config_file("COCO-InstanceSegmentation/mask_rcnn_R_101_FPN_3x.yaml"))
+cfg.merge_from_file(model_zoo.get_config_file("COCO-InstanceSegmentation/mask_rcnn_R_50_FPN_3x.yaml"))
 
 # Set number of classes
-cfg.MODEL.ROI_HEADS.NUM_CLASSES = 26
+cfg.MODEL.ROI_HEADS.NUM_CLASSES = 29
 
 # Set weights (From arguments)
 cfg.MODEL.WEIGHTS = weights

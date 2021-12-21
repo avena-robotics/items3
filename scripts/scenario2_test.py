@@ -4,7 +4,7 @@ import numpy as np
 import argparse
 
 import sys
-sys.path.append("/home/avena/software/items3/scripts")
+sys.path.append("/home/avena/blenderproc/scripts")
 
 from utils import get_objs, choose_items_to_load, sample_pose_wrapper
 
