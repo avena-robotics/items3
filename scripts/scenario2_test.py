@@ -18,7 +18,7 @@ def main():
     blenderproc.init()
     blenderproc.utility.reset_keyframes()
 
-    table = blenderproc.loader.load_blend("/home/avena/software/items3/scenes/Bez_fspy.blend")
+    table = blenderproc.loader.load_blend("/home/avena/blenderproc/scenes/Bez_fspy.blend")
     table[0].enable_rigidbody(True, collision_shape='CONVEX_HULL')
     blenderproc.lighting.light_surface(table, -5, keep_using_base_color=True)
 
