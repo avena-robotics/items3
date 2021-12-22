@@ -55,9 +55,6 @@ def main():
 
         blenderproc.object.sample_poses_on_surface(consumables, containers[i], consumables_sampler, min_distance=0.1, max_distance=1)
 
-        # for material in consumables[0].get_materials():
-        #     material.make_emissive(20)
-
 
     blenderproc.object.simulate_physics_and_fix_final_poses(0.5, 2)
 
@@ -75,7 +72,7 @@ def main():
     matrix_world = blenderproc.math.build_transformation_mat(position, rotation)
     blenderproc.camera.add_camera_pose(matrix_world)
 
-    blenderproc.renderer.set_samples(30)
+    blenderproc.renderer.set_noise_threshold(0.1)
     data = blenderproc.renderer.render()
     seg_data = blenderproc.renderer.render_segmap(map_by=["class", "instance", "name"])
     blenderproc.writer.write_coco_annotations(args.output,

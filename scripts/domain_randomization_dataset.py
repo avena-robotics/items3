@@ -11,22 +11,22 @@ import argparse
 import os
 import random
 import sys
-sys.path.append("/home/avena/software/items3/scripts")
+sys.path.append("/home/avena/blenderproc/scripts")
 
-
-from utils import get_all_items_list, choose_items_to_load, sample_pose_wrapper
+from utils import get_all_items_list, choose_items_to_load, sample_pose_wrapper, get_objs
 
 parser = argparse.ArgumentParser()
 parser.add_argument('output', nargs='?')
+parser.add_argument('data', nargs='?')
 args = parser.parse_args()
-
 
 
 def main():
     n = 10000
-    all_items = get_all_items_list("/home/avena/software/items3/loading_dictionaries/items_dictionary.json")
-    consumables_items = get_all_items_list("/home/avena/software/items3/loading_dictionaries/consumables_dictionary.json")
-    containers_items = get_all_items_list("/home/avena/software/items3/loading_dictionaries/containers_dictionary.json")
+    # all_items = get_all_items_list("/home/avena/blenderproc/loading_dictionaries/items_dictionary.json")
+    all_items = get_objs(args.data, None, [])
+    consumables_items = get_objs(args.data, "consumables", [])
+    containers_items = get_objs(args.data, "containers", [])
     plane_containers = {}
     capable_containers = {}
     for k, v in containers_items.items():
@@ -42,16 +42,16 @@ def main():
         blenderproc.init()
         blenderproc.utility.reset_keyframes()
 
-        table = blenderproc.loader.load_blend("/home/avena/software/items3/scenes/Bez_fspy.blend")[0]
+        table = blenderproc.loader.load_blend("/home/avena/blenderproc/scenes/Bez_fspy.blend")[0]
         table.enable_rigidbody(False, collision_shape='CONVEX_HULL', collision_margin=0.001, mass=5)
-        # materials = blenderproc.loader.load_ccmaterials("/home/avena/software/items3/scenes/new_textures2", preload=True)
-        # table.new_material("Texture")
-        # for i, material in enumerate(table.get_materials()):
-        #     table.set_material(i, random.choice(materials))
-        # blenderproc.loader.load_ccmaterials("/home/avena/software/items3/scenes/new_textures2", fill_used_empty_materials=True)
-        #
-        # hdri = blenderproc.loader.get_random_world_background_hdr_img_path_from_haven("/home/avena/software/items3/scenes")
-        # blenderproc.world.set_world_background_hdr_img(hdri)
+        materials = blenderproc.loader.load_ccmaterials("/home/avena/blenderproc/scenes/new_textures2", preload=True)
+        table.new_material("Texture")
+        for i, material in enumerate(table.get_materials()):
+            table.set_material(i, random.choice(materials))
+        blenderproc.loader.load_ccmaterials("/home/avena/blenderproc/scenes/new_textures2", fill_used_empty_materials=True)
+
+        hdri = blenderproc.loader.get_random_world_background_hdr_img_path_from_haven("/home/avena/blenderproc/scenes")
+        blenderproc.world.set_world_background_hdr_img(hdri)
 
         if scenario_number == 0:
             number_of_items = np.random.randint(10, 25)
@@ -77,7 +77,7 @@ def main():
 
 
         light_p = blenderproc.types.Light()
-        light_p.set_type("AREA")
+        light_p.set_type("SPOT")
         light_p.set_location([0, 0, 5])
         light_p.set_rotation_euler([0, 0, 0])
         light_p.set_energy(200)
@@ -92,14 +92,30 @@ def main():
         blenderproc.camera.set_intrinsics_from_blender_params(lens=0.017453, image_width=1000, image_height=720,
                                                               lens_unit='FOV')
 
-        position = [0, 0, 100]
+        position = [0, 0, 138]
         rotation = [0, 0, 0]
-
+        # position = [0, 0, 100]
         matrix_world = blenderproc.math.build_transformation_mat(position, rotation)
         blenderproc.camera.add_camera_pose(matrix_world)
 
 
-        blenderproc.renderer.set_samples(100)
+
+        # position = [0, 0, 110]
+        # matrix_world = blenderproc.math.build_transformation_mat(position, rotation)
+        # blenderproc.camera.add_camera_pose(matrix_world)
+
+        # blenderproc.material.change_to_texture_less_render(True)
+        for item in loaded_items:
+            for material in item.get_materials():
+                blenderproc.material.add_dust(material, strength=np.random.uniform(0, 1))
+
+        position = [30, 30, 90]
+        rotation = blenderproc.camera.rotation_from_forward_vec(poi - position)
+        matrix_world = blenderproc.math.build_transformation_mat(position, rotation)
+        blenderproc.camera.add_camera_pose(matrix_world)
+
+
+        blenderproc.renderer.set_noise_threshold(0.1)
         data = blenderproc.renderer.render()
         seg_data = blenderproc.renderer.render_segmap(map_by=["class", "instance"])
         blenderproc.writer.write_coco_annotations(args.output,
