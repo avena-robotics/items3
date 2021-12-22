@@ -11,8 +11,7 @@ import argparse
 import os
 import random
 import sys
-sys.path.append("/home/avena/software/items3/scripts")
-
+sys.path.append("/home/avena/blenderproc/scripts")
 
 from utils import get_all_items_list, choose_items_to_load, sample_pose_wrapper
 
@@ -24,9 +23,9 @@ args = parser.parse_args()
 
 def main():
     n = 10000
-    all_items = get_all_items_list("/home/avena/software/items3/loading_dictionaries/items_dictionary.json")
-    consumables_items = get_all_items_list("/home/avena/software/items3/loading_dictionaries/consumables_dictionary.json")
-    containers_items = get_all_items_list("/home/avena/software/items3/loading_dictionaries/containers_dictionary.json")
+    all_items = get_all_items_list("/home/avena/blenderproc/loading_dictionaries/items_dictionary.json")
+    consumables_items = get_all_items_list("/home/avena/blenderproc/loading_dictionaries/consumables_dictionary.json")
+    containers_items = get_all_items_list("/home/avena/blenderproc/loading_dictionaries/containers_dictionary.json")
     plane_containers = {}
     capable_containers = {}
     for k, v in containers_items.items():
@@ -42,15 +41,15 @@ def main():
         blenderproc.init()
         blenderproc.utility.reset_keyframes()
 
-        table = blenderproc.loader.load_blend("/home/avena/software/items3/scenes/Bez_fspy.blend")[0]
+        table = blenderproc.loader.load_blend("/home/avena/blenderproc/scenes/Bez_fspy.blend")[0]
         table.enable_rigidbody(False, collision_shape='CONVEX_HULL', collision_margin=0.001, mass=5)
-        materials = blenderproc.loader.load_ccmaterials("/home/avena/software/items3/scenes/new_textures2", preload=True)
+        materials = blenderproc.loader.load_ccmaterials("/home/avena/blenderproc/scenes/new_textures2", preload=True)
         table.new_material("Texture")
         for i, material in enumerate(table.get_materials()):
             table.set_material(i, random.choice(materials))
-        blenderproc.loader.load_ccmaterials("/home/avena/software/items3/scenes/new_textures2", fill_used_empty_materials=True)
+        blenderproc.loader.load_ccmaterials("/home/avena/blenderproc/scenes/new_textures2", fill_used_empty_materials=True)
 
-        hdri = blenderproc.loader.get_random_world_background_hdr_img_path_from_haven("/home/avena/software/items3/scenes")
+        hdri = blenderproc.loader.get_random_world_background_hdr_img_path_from_haven("/home/avena/blenderproc/scenes")
         blenderproc.world.set_world_background_hdr_img(hdri)
 
         if scenario_number == 0:
@@ -115,7 +114,7 @@ def main():
         blenderproc.camera.add_camera_pose(matrix_world)
 
 
-        blenderproc.renderer.set_samples(100)
+        blenderproc.renderer.set_noise_threshold(0.1)
         data = blenderproc.renderer.render()
         seg_data = blenderproc.renderer.render_segmap(map_by=["class", "instance"])
         blenderproc.writer.write_coco_annotations(args.output,
