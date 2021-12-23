@@ -11,14 +11,14 @@ from detectron2.utils.visualizer import Visualizer
 from detectron2.data import MetadataCatalog, DatasetCatalog
 from detectron2.data.datasets import register_coco_instances
 from detectron2.evaluation import COCOEvaluator
-
-register_coco_instances("my_dataset_train5", {}, "/home/avena/blenderproc/datasets/random_domain/dataset1/coco_annotations.json", "/home/avena/blenderproc/datasets/random_domain/dataset1")
-register_coco_instances("my_dataset_train", {}, "/home/avena/blenderproc/datasets/standard/dataset1/coco_annotations.json", "/home/avena/blenderproc/datasets/standard/dataset1")
-register_coco_instances("my_dataset_train1", {}, "/home/avena/blenderproc/datasets/standard/dataset2/coco_annotations.json", "/home/avena/blenderproc/datasets/standard/dataset2")
-register_coco_instances("my_dataset_train2", {}, "/home/avena/blenderproc/datasets/standard/dataset3/coco_annotations.json", "/home/avena/blenderproc/datasets/standard/dataset3")
-register_coco_instances("my_dataset_train3", {}, "/home/avena/blenderproc/datasets/random_domain/dataset2/coco_annotations.json", "/home/avena/blenderproc/datasets/random_domain/dataset2")
-register_coco_instances("my_dataset_train4", {}, "/home/avena/blenderproc/datasets/random_domain/dataset3/coco_annotations.json", "/home/avena/blenderproc/datasets/random_domain/dataset3")
-register_coco_instances("vis", {}, "/home/avena/blenderproc/datasets/standard_001_blender3/coco_annotations.json", "/home/avena/blenderproc/datasets/standard_001_blender3")
+from detectron2.engine import default_argument_parser, launch
+register_coco_instances("my_dataset_train5", {}, "/home/avena/blenderproc/datasets/new_scenario1/dataset4/coco_annotations.json", "/home/avena/blenderproc/datasets/new_scenario1/dataset4")
+register_coco_instances("my_dataset_train", {},  "/home/avena/blenderproc/datasets/new_scenario2/dataset1/coco_annotations.json", "/home/avena/blenderproc/datasets/new_scenario2/dataset1")
+register_coco_instances("my_dataset_train1", {}, "/home/avena/blenderproc/datasets/new_scenario2/dataset2/coco_annotations.json", "/home/avena/blenderproc/datasets/new_scenario2/dataset2")
+register_coco_instances("my_dataset_train2", {}, "/home/avena/blenderproc/datasets/new_scenario2/dataset3/coco_annotations.json", "/home/avena/blenderproc/datasets/new_scenario2/dataset3")
+register_coco_instances("my_dataset_train3", {}, "/home/avena/blenderproc/datasets/new_scenario2/dataset4/coco_annotations.json", "/home/avena/blenderproc/datasets/new_scenario2/dataset4")
+register_coco_instances("my_dataset_train4", {}, "/home/avena/blenderproc/datasets/new_scenario2/dataset5/coco_annotations.json", "/home/avena/blenderproc/datasets/new_scenario2/dataset5")
+register_coco_instances("vis", {}, "/home/avena/blenderproc/datasets/new_scenario1/dataset1/coco_annotations.json", "/home/avena/blenderproc/datasets/new_scenario1/dataset1")
 
 from detectron2.engine import DefaultTrainer
 
@@ -116,66 +116,78 @@ class MyTrainer(DefaultTrainer):
         ))
         return hooks
 
+def main(args):
+    cfg = get_cfg()
+    cfg.INPUT.MASK_FORMAT = "bitmask"
 
-cfg = get_cfg()
-cfg.INPUT.MASK_FORMAT = "bitmask"
-
-cfg.merge_from_file(model_zoo.get_config_file("COCO-InstanceSegmentation/mask_rcnn_R_101_FPN_3x.yaml"))
-cfg.DATASETS.TRAIN = ("my_dataset_train",  "my_dataset_train1", "my_dataset_train2", "my_dataset_train3" , "my_dataset_train4", "my_dataset_train5")
-cfg.DATASETS.TEST = ("vis", )
-
-
-# import random
-# fruits_nuts_metadata = MetadataCatalog.get("vis")
-# dataset_dicts = DatasetCatalog.get("vis")
-# for d in random.sample(dataset_dicts, 293):
-#     img = cv2.imread(d["file_name"])
-#     visualizer = Visualizer(img[:, :, ::-1], scale=1)
-#     vis = visualizer.draw_dataset_dict(d)
-#     cv2.imshow("", vis.get_image()[:, :, ::-1])
-#     cv2.waitKey(0)
+    cfg.merge_from_file(model_zoo.get_config_file("COCO-InstanceSegmentation/mask_rcnn_R_50_FPN_3x.yaml"))
+    cfg.DATASETS.TRAIN = ("my_dataset_train",  "my_dataset_train1", "my_dataset_train2", "my_dataset_train3" , "my_dataset_train4", "my_dataset_train5")
+    cfg.DATASETS.TEST = ("vis", )
 
 
+    # import random
+    # fruits_nuts_metadata = MetadataCatalog.get("vis")
+    # dataset_dicts = DatasetCatalog.get("vis")
+    # for d in random.sample(dataset_dicts, 293):
+    #     img = cv2.imread(d["file_name"])
+    #     visualizer = Visualizer(img[:, :, ::-1], scale=1)
+    #     vis = visualizer.draw_dataset_dict(d)
+    #     cv2.imshow("", vis.get_image()[:, :, ::-1])
+    #     cv2.waitKey(0)
 
 
 
 
-cfg.DATALOADER.NUM_WORKERS = 2
-cfg.MODEL.WEIGHTS = "/home/avena/blenderproc/detectron2/output_R101/model_0014999.pth"  # Let training initialize from model zoo
-cfg.SOLVER.IMS_PER_BATCH = 2
-cfg.OUTPUT_DIR = "output_R101_resume"
-cfg.SOLVER.BASE_LR = 0.002  # pick a good LR
-cfg.SOLVER.MAX_ITER = 15100    # 300 iterations seems good enough for this toy dataset; you will need to train longer for a practical dataset
-cfg.SOLVER.STEPS = []        # do not decay learning rate
-cfg.MODEL.ROI_HEADS.BATCH_SIZE_PER_IMAGE = 512   # faster, and good enough for this toy dataset (default: 512)
-cfg.MODEL.ROI_HEADS.NUM_CLASSES = 29  # only has one class (ballon). (see https://detectron2.readthedocs.io/tutorials/datasets.html#update-the-config-for-new-datasets)
-# NOTE: this config means the number of classes, but a few popular unofficial tutorials incorrect uses num_classes+1 here.
-cfg.TEST.EVAL_PERIOD = 200
-os.makedirs(cfg.OUTPUT_DIR, exist_ok=True)
-trainer = MyTrainer(cfg)
-trainer.resume_or_load(resume=False)
-trainer.train()
-
-cfg.MODEL.WEIGHTS = os.path.join(cfg.OUTPUT_DIR, "model_final.pth")  # path to the model we just trained
-cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.05   # set a custom testing threshold
-predictor = DefaultPredictor(cfg)
 
 
-from detectron2.utils.visualizer import ColorMode
-dataset_dicts_metadata = MetadataCatalog.get("my_dataset_train")
-dataset_dicts = DatasetCatalog.get("my_dataset_train")
-for d in random.sample(dataset_dicts, 5):
-    im = cv2.imread(d["file_name"])
-    outputs = predictor(im)  # format is documented at https://detectron2.readthedocs.io/tutorials/models.html#model-output-format
-    v = Visualizer(im[:, :, ::-1],
-                   metadata=dataset_dicts_metadata,
-                   scale=0.5,
-                   instance_mode=ColorMode.IMAGE_BW   # remove the colors of unsegmented pixels. This option is only available for segmentation models
+    cfg.DATALOADER.NUM_WORKERS = 2
+    # cfg.MODEL.WEIGHTS = "/home/avena/blenderproc/detectron2/output_R101/model_0014999.pth"  # Let training initialize from model zoo
+    cfg.SOLVER.IMS_PER_BATCH = 2
+    cfg.OUTPUT_DIR = "output_R50_shadows"
+    cfg.SOLVER.BASE_LR = 0.004  # pick a good LR
+    cfg.SOLVER.MAX_ITER = 15100    # 300 iterations seems good enough for this toy dataset; you will need to train longer for a practical dataset
+    cfg.SOLVER.STEPS = []        # do not decay learning rate
+    cfg.MODEL.ROI_HEADS.NUM_CLASSES = 29  # only has one class (ballon). (see https://detectron2.readthedocs.io/tutorials/datasets.html#update-the-config-for-new-datasets)
+    # NOTE: this config means the number of classes, but a few popular unofficial tutorials incorrect uses num_classes+1 here.
+    cfg.TEST.EVAL_PERIOD = 200
+    os.makedirs(cfg.OUTPUT_DIR, exist_ok=True)
+    trainer = MyTrainer(cfg)
+    trainer.resume_or_load(resume=False)
+    trainer.train()
+
+    cfg.MODEL.WEIGHTS = os.path.join(cfg.OUTPUT_DIR, "model_final.pth")  # path to the model we just trained
+    cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.05   # set a custom testing threshold
+    predictor = DefaultPredictor(cfg)
+
+
+    from detectron2.utils.visualizer import ColorMode
+    dataset_dicts_metadata = MetadataCatalog.get("my_dataset_train")
+    dataset_dicts = DatasetCatalog.get("my_dataset_train")
+    for d in random.sample(dataset_dicts, 5):
+        im = cv2.imread(d["file_name"])
+        outputs = predictor(im)  # format is documented at https://detectron2.readthedocs.io/tutorials/models.html#model-output-format
+        v = Visualizer(im[:, :, ::-1],
+                       metadata=dataset_dicts_metadata,
+                       scale=0.5,
+                       instance_mode=ColorMode.IMAGE_BW   # remove the colors of unsegmented pixels. This option is only available for segmentation models
+        )
+        out = v.draw_instance_predictions(outputs["instances"].to("cpu"))
+        cv2.imshow("", out.get_image()[:, :, ::-1])
+        cv2.waitKey(0)
+
+
+if __name__ == "__main__":
+    args = default_argument_parser().parse_args()
+
+    launch(
+        main,
+        # 2 - number of GPUs
+        2,
+        num_machines=args.num_machines,
+        machine_rank=args.machine_rank,
+        dist_url=args.dist_url,
+        args=(args,),
     )
-    out = v.draw_instance_predictions(outputs["instances"].to("cpu"))
-    cv2.imshow("", out.get_image()[:, :, ::-1])
-    cv2.waitKey(0)
-
 # from detectron2.evaluation import COCOEvaluator, inference_on_dataset
 # from detectron2.data import build_detection_test_loader
 # evaluator = COCOEvaluator("my_dataset_train", output_dir="./output")
