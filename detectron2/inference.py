@@ -16,19 +16,27 @@ import os
 parser = argparse.ArgumentParser()
 parser.add_argument("Weights", metavar="weights", type=str)
 parser.add_argument("Path", metavar="path", type=str)
-parser.add_argument("Threshold", metavar="thresh", type=float)
+parser.add_argument("-t", '--threshold', default=0.5, type=float, help='threshold of confidence. predictions below'
+                                                                       'threshold are rejected')
+parser.add_argument('-s', '--scale', default=1, type=float, help='scale of the inference with respect to the input')
+parser.add_argument('-m', '--model', default=0, type=float, help='0 - R50 backbone, 1 - R101 backbone', choices=[0, 1])
+
 args = parser.parse_args()
 
 # Catching parsed arguments
 path = args.Path
-threshold = args.Threshold
+threshold = args.threshold
 weights = args.Weights
-
 # Setting model
 cfg = get_cfg()
 
 # Load config used for training
-cfg.merge_from_file(model_zoo.get_config_file("COCO-InstanceSegmentation/mask_rcnn_R_50_FPN_3x.yaml"))
+if args.model == 0:
+    cfg.merge_from_file(model_zoo.get_config_file("COCO-InstanceSegmentation/mask_rcnn_R_50_FPN_3x.yaml"))
+elif args.model == 1:
+    cfg.merge_from_file(model_zoo.get_config_file("COCO-InstanceSegmentation/mask_rcnn_R_101_FPN_3x.yaml"))
+# else:
+#     raise ValueError("Model of this number is not supported yet")
 
 # Set number of classes
 cfg.MODEL.ROI_HEADS.NUM_CLASSES = 29
@@ -51,7 +59,7 @@ outputs = predictor(im)
 # Color visualization
 v = Visualizer(im[:, :, ::-1],
                    # metadata=dataset_dicts_metadata,
-                   scale=0.5,
+                   scale=args.scale,
                    instance_mode=ColorMode.IMAGE_BW
     )
 out = v.draw_instance_predictions(outputs["instances"].to("cpu"))

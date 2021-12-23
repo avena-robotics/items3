@@ -125,15 +125,15 @@ cfg.DATASETS.TRAIN = ("my_dataset_train",  "my_dataset_train1", "my_dataset_trai
 cfg.DATASETS.TEST = ("vis", )
 
 
-# import random
-# fruits_nuts_metadata = MetadataCatalog.get("vis")
-# dataset_dicts = DatasetCatalog.get("vis")
-# for d in random.sample(dataset_dicts, 293):
-#     img = cv2.imread(d["file_name"])
-#     visualizer = Visualizer(img[:, :, ::-1], scale=1)
-#     vis = visualizer.draw_dataset_dict(d)
-#     cv2.imshow("", vis.get_image()[:, :, ::-1])
-#     cv2.waitKey(0)
+import random
+fruits_nuts_metadata = MetadataCatalog.get("my_dataset_train")
+dataset_dicts = DatasetCatalog.get("my_dataset_train")
+for d in random.sample(dataset_dicts, 293):
+    img = cv2.imread(d["file_name"])
+    visualizer = Visualizer(img[:, :, ::-1], scale=1)
+    vis = visualizer.draw_dataset_dict(d)
+    cv2.imshow("", vis.get_image()[:, :, ::-1])
+    cv2.waitKey(0)
 
 
 
