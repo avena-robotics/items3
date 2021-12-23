@@ -91,8 +91,8 @@ def main():
     blenderproc.camera.set_intrinsics_from_blender_params(lens=0.017453 / 2, image_width=1000, image_height=720,
                                                           lens_unit='FOV')
 
-    position = [0, 0, 80]
-    rotation = [0, 0, 0]
+    position = [0, 0, 138]
+    rotation = [0, 0, np.pi / 2]
     matrix_world = blenderproc.math.build_transformation_mat(position, rotation)
     blenderproc.camera.add_camera_pose(matrix_world)
 

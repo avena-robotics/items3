@@ -13,7 +13,7 @@ import random
 import sys
 sys.path.append("/home/avena/blenderproc/scripts")
 
-from utils import get_all_items_list, choose_items_to_load, sample_pose_wrapper, get_objs
+from utils import choose_items_to_load, sample_pose_wrapper, get_objs
 
 parser = argparse.ArgumentParser()
 parser.add_argument('output', nargs='?')
@@ -23,7 +23,6 @@ args = parser.parse_args()
 
 def main():
     n = 10000
-    # all_items = get_all_items_list("/home/avena/blenderproc/loading_dictionaries/items_dictionary.json")
     all_items = get_objs(args.data, None, [])
     consumables_items = get_objs(args.data, "consumables", [])
     containers_items = get_objs(args.data, "containers", [])
@@ -81,13 +80,7 @@ def main():
         light_p.set_location([0, 0, 5])
         light_p.set_rotation_euler([0, 0, 0])
         light_p.set_energy(200)
-        # r = np.random.randint(2, 10)
-        # alpha = np.random.randint(0, 360)
-        # y = r * math.sin(math.pi / 180 * alpha)
-        # x = r * math.cos(math.pi / 180 * alpha)
-        # z = np.random.randint(2, 5)
-        # light_p.set_location([x, y, z])
-        # light_p.set_energy(1000)
+
 
         blenderproc.camera.set_intrinsics_from_blender_params(lens=0.017453, image_width=1000, image_height=720,
                                                               lens_unit='FOV')
