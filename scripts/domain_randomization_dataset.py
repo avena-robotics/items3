@@ -22,7 +22,7 @@ args = parser.parse_args()
 
 
 def main():
-    n = 10000
+    n = 1
     all_items = get_objs(args.data, None, [])
     consumables_items = get_objs(args.data, "consumables", [])
     containers_items = get_objs(args.data, "containers", [])
@@ -100,7 +100,7 @@ def main():
         # blenderproc.material.change_to_texture_less_render(True)
         for item in loaded_items:
             for material in item.get_materials():
-                blenderproc.material.add_dust(material, strength=np.random.uniform(0, 1))
+                blenderproc.material.add_dust(material, strength=np.random.uniform(0, 0.3))
 
         position = [30, 30, 90]
         rotation = blenderproc.camera.rotation_from_forward_vec(poi - position)

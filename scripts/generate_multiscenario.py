@@ -8,6 +8,7 @@ import numpy as np
 import argparse
 import os
 import sys
+import random
 sys.path.append("/home/avena/blenderproc/scripts")
 
 
@@ -20,7 +21,7 @@ args = parser.parse_args()
 
 
 def main():
-    n = 10000
+    n = 1
     all_items = get_objs(args.data, None, [])
     consumables_items = get_objs(args.data, "consumables", [])
     plane_containers = get_objs(args.data, "containers", ['bowl', 'plate'])
@@ -33,9 +34,21 @@ def main():
         blenderproc.init()
         blenderproc.utility.reset_keyframes()
 
+
+        hdri = blenderproc.loader.get_random_world_background_hdr_img_path_from_haven("/home/avena/blenderproc/scenes")
+        blenderproc.world.set_world_background_hdr_img(hdri)
+
         table = blenderproc.loader.load_blend("/home/avena/blenderproc/scenes/Bez_fspy.blend")
         table[0].enable_rigidbody(False, collision_shape='CONVEX_HULL', collision_margin=0.001, mass=5)
-        blenderproc.lighting.light_surface(table, -5)
+
+        # with 0.5 probability randomize table textures
+        prob = np.random.uniform()
+        if prob > 0.5:
+            materials = blenderproc.loader.load_ccmaterials("/home/avena/blenderproc/scenes/new_textures2", preload=True)
+            table[0].new_material("Texture")
+            for i, material in enumerate(table[0].get_materials()):
+                table[0].set_material(i, random.choice(materials))
+            blenderproc.loader.load_ccmaterials("/home/avena/blenderproc/scenes/new_textures2", fill_used_empty_materials=True)
 
         if scenario_number == 0:
             number_of_items = np.random.randint(10, 25)
@@ -48,9 +61,18 @@ def main():
                 item.set_cp("category_id", item_id)
                 item_name = name.split("/")[-3].split("-")[-1]
                 item.set_name(item_name)
-                item.enable_rigidbody(True, collision_shape='MESH', collision_margin=0.001)#, mass=500, friction=150)
+                item.enable_rigidbody(True, collision_shape='CONVEX_HULL', collision_margin=0.001)#, mass=500, friction=150)
 
-            loaded_items = blenderproc.object.sample_poses_on_surface(loaded_items, table[0], sampler, min_distance=0.1, max_distance=3)
+            loaded_items = blenderproc.object.sample_poses_on_surface(loaded_items, table[0], sampler, min_distance=0.2, max_distance=3)
+
+            prob = np.random.uniform()
+            if prob > 0.5:
+                for item in loaded_items:
+                    for material in item.get_materials():
+                        blenderproc.material.add_dust(material, strength=np.random.uniform(0, 0.3))
+
+
+            blenderproc.object.simulate_physics_and_fix_final_poses(0.5, 2)
 
         if scenario_number == 1:
             n_containers = 5
@@ -68,7 +90,7 @@ def main():
 
             containers = blenderproc.object.sample_poses_on_surface(containers, table[0], container_sampler,
                                                                     min_distance=0.1, max_distance=3)
-            blenderproc.lighting.light_surface(containers, -1)
+            # blenderproc.lighting.light_surface(containers, -1)
 
             for i in range(len(containers)):
                 consumable_to_load, id_of_consumable_to_load = choose_items_to_load(consumables_items, 1)
@@ -130,7 +152,7 @@ def main():
 
             containers = blenderproc.object.sample_poses_on_surface(containers, table[0], container_sampler,
                                                                     min_distance=0.1, max_distance=3)
-            blenderproc.lighting.light_surface(containers, -5)
+            # blenderproc.lighting.light_surface(containers, -5)
 
             for i in range(len(containers)):
                 consumables_to_load, ids_of_consumable_to_load = choose_items_to_load(consumables_items, 4)
@@ -148,23 +170,48 @@ def main():
 
                 blenderproc.object.sample_poses_on_surface(consumables, containers[i], consumables_sampler,
                                                            min_distance=0.1, max_distance=1)
-            blenderproc.object.simulate_physics_and_fix_final_poses(0.5, 2)
+            # blenderproc.object.simulate_physics_and_fix_final_poses(0.5, 2)
 
 
         light_p = blenderproc.types.Light()
-        light_p.set_type("POINT")
+        light_p.set_type("AREA")
         light_p.set_location([0, 0, 0.9])
         light_p.set_rotation_euler([0, 0, 0])
-        light_p.set_energy(80)
+        light_p.set_energy(10)
+        light_p1 = blenderproc.types.Light()
+        light_p1.set_type("AREA")
+        light_p1.set_location([0.5, 0, 0.9])
+        light_p1.set_rotation_euler([0, 0, 0])
+        light_p1.set_energy(10)
+        light_p2 = blenderproc.types.Light()
+        light_p2.set_type("AREA")
+        light_p2.set_location([-0.5, 0, 0.9])
+        light_p2.set_rotation_euler([0, 0, 0])
+        light_p2.set_energy(10)
 
-        blenderproc.camera.set_intrinsics_from_blender_params(lens=0.017453 / 2, image_width=1000, image_height=720,
-                                                              lens_unit='FOV')
+        # Choose camera, ortho or not
+        prob = np.random.uniform()
+        if prob > 0.5:
+            blenderproc.camera.set_intrinsics_from_blender_params(lens=0.017453, image_width=1000, image_height=720,
+                                                                lens_unit='FOV')
 
-        position = [0, 0, 138]
-        rotation = [0, 0, np.pi / 2]
+            position = [0, 0, 138]
+            rotation = [0, 0, 0]
 
-        matrix_world = blenderproc.math.build_transformation_mat(position, rotation)
-        blenderproc.camera.add_camera_pose(matrix_world)
+            matrix_world = blenderproc.math.build_transformation_mat(position, rotation)
+            blenderproc.camera.add_camera_pose(matrix_world)
+
+        else:
+            blenderproc.camera.set_intrinsics_from_blender_params(lens=0.6981317008, image_width=1000, image_height=720,
+                                                                lens_unit='FOV')
+
+            position = [2.61, -1.18, 2.91]
+            rotation = [0.6981317008, 0, 1.1519173063]
+
+            matrix_world = blenderproc.math.build_transformation_mat(position, rotation)
+            blenderproc.camera.add_camera_pose(matrix_world)
+
+
 
         blenderproc.renderer.set_noise_threshold(0.1)
         data = blenderproc.renderer.render()

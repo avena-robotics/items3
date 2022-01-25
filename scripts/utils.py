@@ -22,7 +22,7 @@ def get_objs(path: str, category: str = None, items_names_to_exclude: list = [])
     return item_dictionary
 
 
-def choose_items_to_load(items: dict, n: int) -> (list, list):
+def choose_items_to_load(items: dict, n: int):
     ids = list(set(items.values()))
     ids_list = list(np.random.choice(ids, n))
     ids_list = list(map(int, ids_list))
