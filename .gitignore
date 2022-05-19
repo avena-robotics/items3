@@ -7,3 +7,10 @@ scenes/textures
 .idea
 detectron2/inference_output
 detectron2/output
+scripts/__*
+.ipynb_checkpoints/
+blenderproc/
+detectron2/model_zoo/
+paper_datasets/
+detectron2/detectron2_repo
+detectron2/inference_output/inferece_results.json

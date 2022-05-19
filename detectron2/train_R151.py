@@ -26,22 +26,33 @@ from detectron2.engine import default_argument_parser, launch
 # register_coco_instances("my_dataset_train9", {}, "/home/avena/blenderproc/datasets/textureless3/coco_annotations.json", "/home/avena/blenderproc/datasets/textureless3")
 
 
+# register_coco_instances("my_dataset_train1", {}, "/home/avena/datasets_new/datasets/dataset_001/coco_annotations.json", "/home/avena/datasets_new/datasets/dataset_001")
+# register_coco_instances("my_dataset_train2", {}, "/home/avena/datasets_new/datasets/dataset_002/coco_annotations.json", "/home/avena/datasets_new/datasets/dataset_002")
+# register_coco_instances("my_dataset_train3", {}, "/home/avena/datasets_new/datasets/dataset_003/coco_annotations.json", "/home/avena/datasets_new/datasets/dataset_003")
+# register_coco_instances("my_dataset_train4", {}, "/home/avena/datasets_new/datasets/dataset_004/coco_annotations.json", "/home/avena/datasets_new/datasets/dataset_004")
+# register_coco_instances("my_dataset_train5", {}, "/home/avena/datasets_new/datasets/dataset_005/coco_annotations.json", "/home/avena/datasets_new/datasets/dataset_005")
+# register_coco_instances("my_dataset_val1", {}, "/home/avena/datasets_new/datasets/dataset_006/coco_annotations.json", "/home/avena/datasets_new/datasets/dataset_006")
 register_coco_instances("dataset_train_1", {}, "/home/avena/multiscenario_2/coco_annotations.json", "/home/avena/multiscenario_2")
-register_coco_instances("dataset_train_2", {}, "/home/avena/blenderproc/datasets/old_darwin_dataset/new_coco_intnames.json", "/home/avena/blenderproc/datasets/old_darwin_dataset")
+# register_coco_instances("dataset_train_2", {}, "/home/avena/blenderproc/paper_datasets/HDRI_worktoptexture_dust/random/dataset1/coco_annotations.json", "/home/avena/blenderproc/paper_datasets/HDRI_worktoptexture_dust/random/dataset1")
+# register_coco_instances("dataset_train_3", {}, "/home/avena/blenderproc/paper_datasets/HDRI_worktoptexture_dust/random/dataset2/coco_annotations.json", "/home/avena/blenderproc/paper_datasets/HDRI_worktoptexture_dust/random/dataset2")
+# register_coco_instances("dataset_train_4", {}, "/home/avena/blenderproc/paper_datasets/HDRI_worktoptexture_dust/random/dataset3/coco_annotations.json", "/home/avena/blenderproc/paper_datasets/HDRI_worktoptexture_dust/random/dataset3")
+# register_coco_instances("dataset_train_5", {}, "/home/avena/blenderproc/paper_datasets/HDRI_worktoptexture_dust/random/dataset4/coco_annotations.json", "/home/avena/blenderproc/paper_datasets/HDRI_worktoptexture_dust/random/dataset4")
+# register_coco_instances("dataset_train_6", {}, "/home/avena/blenderproc/paper_datasets/HDRI_worktoptexture_dust/random/dataset5/coco_annotations.json", "/home/avena/blenderproc/paper_datasets/HDRI_worktoptexture_dust/random/dataset5")
+# register_coco_instances("dataset_train_7", {}, "/home/avena/blenderproc/paper_datasets/HDRI_worktoptexture_textureless/random/dataset1/coco_annotations.json", "/home/avena/blenderproc/paper_datasets/HDRI_worktoptexture_textureless/random/dataset1")
+# register_coco_instances("dataset_train_8", {}, "/home/avena/blenderproc/paper_datasets/worktop_HDRI/random/dataset1/coco_annotations.json", "/home/avena/blenderproc/paper_datasets/worktop_HDRI/random/dataset1")
+# register_coco_instances("dataset_train_9", {}, "/home/avena/blenderproc/paper_datasets/worktop_HDRI/random/dataset2/coco_annotations.json", "/home/avena/blenderproc/paper_datasets/worktop_HDRI/random/dataset2")
+# register_coco_instances("dataset_train_10", {}, "/home/avena/blenderproc/paper_datasets/worktop_HDRI/random/dataset3/coco_annotations.json", "/home/avena/blenderproc/paper_datasets/worktop_HDRI/random/dataset3")
+
+# register_coco_instances("dataset_train_1", {}, "/home/avena/blenderproc/paper_datasets/worktop_HDRI/random/dataset1/coco_annotations.json", "/home/avena/blenderproc/paper_datasets/worktop_HDRI/random/dataset1")
+# register_coco_instances("dataset_train_2", {}, "/home/avena/blenderproc/paper_datasets/worktop_HDRI/random/dataset2/coco_annotations.json", "/home/avena/blenderproc/paper_datasets/worktop_HDRI/random/dataset2")
+# register_coco_instances("dataset_train_3", {}, "/home/avena/blenderproc/paper_datasets/HDRI_worktoptexture_shadows/random/dataset1/coco_annotations.json", "/home/avena/blenderproc/paper_datasets/HDRI_worktoptexture_shadows/random/dataset1")
+# register_coco_instances("dataset_train_4", {}, "/home/avena/blenderproc/paper_datasets/HDRI_worktoptexture_shadows/random/dataset2/coco_annotations.json", "/home/avena/blenderproc/paper_datasets/HDRI_worktoptexture_shadows/random/dataset2")
 
 
-# register_coco_instances("my_dataset_train2", {}, "/home/avena/blenderproc/datasets/dataset_002/coco_annotations.json", "/home/avena/blenderproc/datasets/dataset_002")
-# register_coco_instances("my_dataset_train3", {}, "/home/avena/blenderproc/datasets/dataset_003/coco_annotations.json", "/home/avena/blenderproc/datasets/dataset_003")
-# register_coco_instances("my_dataset_train4", {}, "/home/avena/blenderproc/datasets/dataset_004/coco_annotations.json", "/home/avena/blenderproc/datasets/dataset_004")
-# register_coco_instances("my_dataset_train5", {}, "/home/avena/blenderproc/datasets/dataset_005/coco_annotations.json", "/home/avena/blenderproc/datasets/dataset_005")
-# register_coco_instances("my_dataset_train6", {}, "/home/avena/blenderproc/datasets/dataset_006/coco_annotations.json", "/home/avena/blenderproc/datasets/dataset_006")
-# register_coco_instances("my_dataset_train7", {}, "/home/avena/blenderproc/datasets/multiscenario_2/coco_annotations.json", "/home/avena/blenderproc/datasets/multiscenario_2")
 
-# register_coco_instances("my_dataset_train8", {}, "/home/avena/blenderproc/datasets/textureless1/coco_annotations.json", "/home/avena/blenderproc/datasets/textureless1")
+register_coco_instances("validation_dataset", {}, "/home/avena/darwin_dataset/new_coco_intnames.json", "/home/avena/darwin_dataset")
 
-# HAND ANNOTATED DATASETS
-register_coco_instances("validation",{}, "/home/avena/blenderproc/datasets/darwin_dataset/new_coco_intnames.json", "/home/avena/blenderproc/datasets/darwin_dataset")
-# register_coco_instances("validation2",{}, "/home/avena/blenderproc/datasets/old_darwin_dataset/new_coco_intnames.json", "/home/avena/blenderproc/datasets/old_darwin_dataset")
+
 
 from detectron2.engine import DefaultTrainer
 
@@ -131,7 +142,7 @@ class MyTrainer(DefaultTrainer):
     def build_hooks(self):
         hooks = super().build_hooks()
         hooks.insert(-1, LossEvalHook(
-            500,
+            1000,
             self.model,
             build_detection_test_loader(
                 self.cfg,
@@ -139,29 +150,27 @@ class MyTrainer(DefaultTrainer):
                 DatasetMapper(self.cfg, True)
             )
         ))
+        hooks = hooks[:-2] + hooks[-2:][::-1]
         return hooks
 
 def main(args):
     cfg = get_cfg()
-    # point_rend.add_pointrend_config(cfg)
+    point_rend.add_pointrend_config(cfg)
     cfg.INPUT.MASK_FORMAT = "bitmask"
 
     # cfg.merge_from_file("/home/avena/blenderproc/detectron2/detectron2_repo/projects/PointRend/configs/InstanceSegmentation/pointrend_rcnn_R_101_FPN_3x_coco.yaml")
     cfg.merge_from_file(model_zoo.get_config_file("COCO-InstanceSegmentation/mask_rcnn_R_101_FPN_3x.yaml"))
 
-    cfg.DATASETS.TRAIN = ("dataset_train_1", "dataset_train_2")
+    cfg.DATASETS.TRAIN = ("dataset_train_1",)#, "dataset_train_2", "dataset_train_3", "dataset_train_4",) #, "dataset_train_2", "dataset_train_3", "dataset_train_4",)
                           
-    cfg.DATASETS.TEST = ("validation", )
+    cfg.DATASETS.TEST = ("validation_dataset",)
 
 
     # import random
-    # fruits_nuts_metadata = MetadataCatalog.get("my_dataset_train1")
-    # dataset_dicts = DatasetCatalog.get("my_dataset_train1")
-    # for d in random.sample(dataset_dicts, 50):
+    # fruits_nuts_metadata = MetadataCatalog.get("my_dataset_val1")
+    # dataset_dicts = DatasetCatalog.get("my_dataset_val1")
+    # for d in random.sample(dataset_dicts, 10):
     #     img = cv2.imread(d["file_name"])
-    #     if img is None:
-    #         print(d["file_name"])
-    #         continue
     #     visualizer = Visualizer(img[:, :, ::-1], scale=1)
     #     vis = visualizer.draw_dataset_dict(d)
     #     cv2.imshow("", vis.get_image()[:, :, ::-1])
@@ -175,31 +184,26 @@ def main(args):
     # END OF GN PART
 
     # TIGHTEN IOU
-    cfg.MODEL.RPN.IOU_THRESHOLDS = [0.2, 0.8]
-    cfg.MODEL.RPN.NMS_THRESH = 0.6
+    # cfg.MODEL.RPN.IOU_THRESHOLDS = [0.2, 0.8]
+    # cfg.MODEL.RPN.NMS_THRESH = 0.6
 
     # TRY 152 BACKBONE
 
-    # cfg.MODEL.RESNETS.DEPTH = 152
+    cfg.MODEL.RESNETS.DEPTH = 152
     cfg.MODEL.BACKBONE.FREEZE_AT = 3
 
-
-    # L2
-    cfg.MODEL.RPN.SMOOTH_L1_BETA = 1.0
-    cfg.MODEL.ROI_BOX_HEAD.SMOOTH_L1_BETA = 1.0
-
-
+    # cfg.MODEL.RPN.SMOOTH_L1_BETA = 1.0
+    # cfg.MODEL.ROI_BOX_HEAD.SMOOTH_L1_BETA = 1.0
 
     cfg.DATALOADER.NUM_WORKERS = 2
     # cfg.MODEL.WEIGHTS = model_zoo.get_checkpoint_url("COCO-InstanceSegmentation/mask_rcnn_R_101_FPN_3x.yaml")
-    # cfg.MODEL.WEIGHTS = "/home/avena/blenderproc/paper_models/PointRend/model_0004999.pth"
+    # cfg.MODEL.WEIGHTS = ""
     cfg.SOLVER.IMS_PER_BATCH = 2
-    cfg.OUTPUT_DIR = "../paper_models/Model_for_fun"
-    cfg.SOLVER.BASE_LR = 0.01 # pick a good LR
+    cfg.OUTPUT_DIR = "../paper_models/ResNet152"
+    cfg.SOLVER.BASE_LR = 0.0025  # pick a good LR
     cfg.SOLVER.MAX_ITER = 20000    # 300 iterations seems good enough for this toy dataset; you will need to train longer for a practical dataset
     cfg.SOLVER.STEPS = [12000, 17000]        # do not decay learning rate
     cfg.MODEL.ROI_HEADS.NUM_CLASSES = 29  # only has one class (ballon). (see https://detectron2.readthedocs.io/tutorials/datasets.html#update-the-config-for-new-datasets)
-    # cfg.MODEL.POINT_HEAD.NUM_CLASSES = 29
     # cfg.MODEL.POINT_HEAD.NUM_CLASSES = 29
     # NOTE: this config means the number of classes, but a few popular unofficial tutorials incorrect uses num_classes+1 here.
     cfg.TEST.EVAL_PERIOD = 500
@@ -209,20 +213,19 @@ def main(args):
     trainer.train()
 
     cfg.MODEL.WEIGHTS = os.path.join(cfg.OUTPUT_DIR, "model_final.pth")  # path to the model we just trained
-    cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.7   # set a custom testing threshold
+    cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.5   # set a custom testing threshold
     predictor = DefaultPredictor(cfg)
 
 
     # from detectron2.utils.visualizer import ColorMode
-    # dataset_dicts_metadata = MetadataCatalog.get("validation")
-    # dataset_dicts = DatasetCatalog.get("validation")
-    # for d in random.sample(dataset_dicts, 30):
+    # dataset_dicts_metadata = MetadataCatalog.get("my_dataset_train1")
+    # dataset_dicts = DatasetCatalog.get("my_dataset_train1")
+    # for d in random.sample(dataset_dicts, 5):
     #     im = cv2.imread(d["file_name"])
-    #     print(d["file_name"])
     #     outputs = predictor(im)  # format is documented at https://detectron2.readthedocs.io/tutorials/models.html#model-output-format
     #     v = Visualizer(im[:, :, ::-1],
     #                    metadata=dataset_dicts_metadata,
-    #                    scale=1,
+    #                    scale=0.5,
     #                    instance_mode=ColorMode.IMAGE_BW   # remove the colors of unsegmented pixels. This option is only available for segmentation models
     #     )
     #     out = v.draw_instance_predictions(outputs["instances"].to("cpu"))

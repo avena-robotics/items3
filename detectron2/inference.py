@@ -5,6 +5,7 @@ from detectron2.engine import DefaultPredictor
 from detectron2.utils.visualizer import Visualizer
 from detectron2 import model_zoo
 from detectron2.utils.visualizer import ColorMode
+from detectron2.projects import point_rend
 
 
 import argparse
@@ -19,7 +20,7 @@ parser.add_argument("Path", metavar="path", type=str)
 parser.add_argument("-t", '--threshold', default=0.5, type=float, help='threshold of confidence. predictions below'
                                                                        'threshold are rejected')
 parser.add_argument('-s', '--scale', default=1, type=float, help='scale of the inference with respect to the input')
-parser.add_argument('-m', '--model', default=0, type=float, help='0 - R50 backbone, 1 - R101 backbone', choices=[0, 1])
+parser.add_argument('-m', '--model', default=0, type=float, help='0 - R50 backbone, 1 - R101 backbone', choices=[0, 1, 2])
 
 args = parser.parse_args()
 
@@ -37,10 +38,22 @@ elif args.model == 1:
     cfg.merge_from_file(model_zoo.get_config_file("COCO-InstanceSegmentation/mask_rcnn_R_101_FPN_3x.yaml"))
 # else:
 #     raise ValueError("Model of this number is not supported yet")
+elif args.model == 2:
+    point_rend.add_pointrend_config(cfg)
+    cfg.MODEL.POINT_HEAD.NUM_CLASSES = 29
+
+
+cfg.MODEL.RPN.IOU_THRESHOLDS = [0.2, 0.8]
+cfg.MODEL.RPN.NMS_THRESH = 0.6
+cfg.MODEL.RPN.SMOOTH_L1_BETA = 1.0
+cfg.MODEL.ROI_BOX_HEAD.SMOOTH_L1_BETA = 1.0
 
 # Set number of classes
 cfg.MODEL.ROI_HEADS.NUM_CLASSES = 29
-
+# cfg.MODEL.RESNETS.NORM = "GN"
+# cfg.MODEL.FPN.NORM = "GN"
+# cfg.MODEL.ROI_MASK_HEAD.NORM = "GN"
+# cfg.MODEL.ROI_BOX_HEAD.NORM = "GN"
 # Set weights (From arguments)
 cfg.MODEL.WEIGHTS = weights
 
@@ -64,8 +77,10 @@ v = Visualizer(im[:, :, ::-1],
     )
 out = v.draw_instance_predictions(outputs["instances"].to("cpu"))
 
+output_folder = "ptcld4_output"
+
 # Saving color
-cv2.imwrite("inference_output/color_output.png", out.get_image()[:, :, ::-1])
+cv2.imwrite(f"{output_folder}/color_output.png", out.get_image()[:, :, ::-1])
 
 # Getting data from inference
 
@@ -87,7 +102,7 @@ masks_paths = []
 # Save each mask and store its path
 for i, mask in enumerate(pred_masks):
     mask *= 255
-    cv2.imwrite(f"inference_output/mask_{i}.png", mask)
+    cv2.imwrite(f"{output_folder}/mask_{i}.png", mask)
     masks_paths.append(os.path.join(os.getcwd(), f"inference_output/mask_{i}.png"))
 
 # Define dictionary of inference. This dictionary will be stored in json format
@@ -95,5 +110,5 @@ inference_results_dict = {"bounding_boxes": bounding_boxes, "pred_classes": pred
                           "pred_masks": masks_paths}
 
 # Save json
-with open("inference_output/inferece_results.json", "w") as f:
+with open(f"{output_folder}/inferece_results.json", "w") as f:
     json.dump(inference_results_dict, f, indent=2)
